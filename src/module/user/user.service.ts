@@ -3,7 +3,6 @@ import { hashPassword } from '../../utils/password.js';
 import type { CreateUserDto, UserResponseDto } from './user.dto.js';
 
 export async function createUser(reqUser: object, data: CreateUserDto): Promise<UserResponseDto> {
-  console.log(reqUser)
   const existingUser = await userRepo.findByEmail(data.email);
   if (existingUser) {
     throw new Error('User with this email already exists');
