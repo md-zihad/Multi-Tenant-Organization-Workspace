@@ -1,10 +1,10 @@
 import { DataSource, type DataSourceOptions } from 'typeorm';
 import dotenv from 'dotenv';
 import { getDatabaseConfig } from './env.js';
-import {User} from '../module/user/User.entity.js';
-import {Organization} from '../module/organization/Organization.entity.js';
-import {Project} from '../module/project/Project.entity.js';
-import {Task} from '../module/task/Task.entity.js';
+import { User } from '../module/user/User.entity.js';
+import { Organization } from '../module/organization/Organization.entity.js';
+import { Project } from '../module/project/Project.entity.js';
+import { Task } from '../module/task/Task.entity.js';
 
 dotenv.config();
 
