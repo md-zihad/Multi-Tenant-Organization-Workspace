@@ -5,7 +5,7 @@ const userRouter = Router();
 
 userRouter.post('/', userController.createUser);
 userRouter.get('/:id', userController.getUserById);
-userRouter.put('/:id', userController.updateUser);
-userRouter.get('/organization/:organizationId', userController.getUsersByOrganization);
+// userRouter.put('/:id', userController.updateUser);
+// userRouter.get('/organization/:organizationId', userController.getUsersByOrganization);
 
 export default userRouter;

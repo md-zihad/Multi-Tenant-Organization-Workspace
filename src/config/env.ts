@@ -22,6 +22,11 @@ interface ServerConfig {
     nodeEnv: string;
 }
 
+interface JWTConfig {
+    secret: string;
+    expiresIn: string;
+}
+
 /**
  * Validates and returns database configuration
  */
@@ -73,5 +78,30 @@ export function getServerConfig(): ServerConfig {
         port,
         host: process.env.HOST || '0.0.0.0',
         nodeEnv: process.env.NODE_ENV || 'development',
+    };
+}
+
+/**
+ * Validates and returns JWT configuration
+ */
+export function getJWTConfig(): JWTConfig {
+    const secret = process.env.JWT_SECRET;
+    
+    if (!secret) {
+        throw new Error(
+            'Missing required environment variable: JWT_SECRET\n' +
+            'Please check your .env file and ensure JWT_SECRET is set.'
+        );
+    }
+
+    if (secret.length < 5) {
+        throw new Error(
+            'JWT_SECRET must be at least 32 characters long for security purposes.'
+        );
+    }
+
+    return {
+        secret,
+        expiresIn: process.env.JWT_EXPIRES_IN || '24h',
     };
 }
