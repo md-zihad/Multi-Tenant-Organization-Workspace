@@ -27,7 +27,7 @@ export class User {
   @Column({ type: 'varchar', length: 255 })
   password!: string;
 
-  @Column({ type: 'varchar', length: 50, default: 'ORGANIZATION_MEMBER' })
+  @Column({ type: 'varchar', length: 50, default: 'MEMBER' })
   role!: string;
 
   @Column({ type: 'uuid', nullable: true })
