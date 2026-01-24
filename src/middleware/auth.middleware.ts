@@ -76,8 +76,7 @@ export function requireRole(...allowedRoles: string[]) {
         organizationId: decoded.organizationId,
       };
 
-      const reqUser = req.user
-      next(reqUser);
+      next();
     } catch (error) {
       const message = error instanceof Error ? error.message : 'Invalid or expired token';
       res.status(401).json({ status: 401, message });
