@@ -4,6 +4,7 @@ import helmet from 'helmet';
 import dotenv from 'dotenv';
 import routes from './route.js';
 import { generalLimiter } from './middleware/ratelimit.middleware.js';
+import { errorHandler, notFoundHandler } from './middleware/errorHandler.middleware.js';
 
 dotenv.config();
 
@@ -29,5 +30,9 @@ app.get('/', (_req: Request, res: Response) => {
     });
 });
 
+
+app.use(notFoundHandler);
+
+app.use(errorHandler);
 
 export default app;
