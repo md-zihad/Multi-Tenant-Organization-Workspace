@@ -13,7 +13,7 @@ export async function createOrganization(req: Request, res: Response, next: Next
   }
 }
 
-export async function getAllOrganizations(req: Request, res: Response, next: NextFunction): Promise<void> {
+export async function getAllOrganizations(_req: Request, res: Response, next: NextFunction): Promise<void> {
   try {
     const result = await organizationService.getAllOrganizations();
     res.status(result.status).json(result);

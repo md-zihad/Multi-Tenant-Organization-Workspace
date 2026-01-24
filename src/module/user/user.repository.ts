@@ -19,12 +19,3 @@ export async function create(userData: Partial<User>): Promise<User> {
   return repo.save(user);
 }
 
-export async function update(id: string, userData: Partial<User>): Promise<void> {
-  const repo = getUserRepository();
-  await repo.update(id, userData);
-}
-
-export async function findByOrganization(organizationId: string): Promise<User[]> {
-  const repo = getUserRepository();
-  return repo.find({ where: { organizationId } });
-}

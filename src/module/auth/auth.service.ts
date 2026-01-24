@@ -10,6 +10,10 @@ export async function login(data: LoginDto): Promise<LoginResponseDto> {
         throw new Error('User with this email does not exist');
     }
 
+    if (!user.isActive) {
+        throw new Error('Account is deactivated. Please contact administrator.');
+    }
+
     const isPasswordValid = await comparePassword(data.password, user.password);
     if (!isPasswordValid) {
         throw new Error('Invalid credentials');

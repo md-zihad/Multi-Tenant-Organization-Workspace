@@ -3,6 +3,8 @@ import type { Express, Request, Response } from 'express';
 import helmet from 'helmet';
 import dotenv from 'dotenv';
 import routes from './route.js';
+import { generalLimiter } from './middleware/ratelimit.middleware.js';
+import { errorHandler, notFoundHandler } from './middleware/errorHandler.middleware.js';
 
 dotenv.config();
 
@@ -12,7 +14,7 @@ app.use(helmet());
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
-app.use('/api/v1', routes);
+app.use('/api/v1', generalLimiter, routes);
 
 app.get('/health', (_req: Request, res: Response) => {
     res.status(200).json({
@@ -28,5 +30,9 @@ app.get('/', (_req: Request, res: Response) => {
     });
 });
 
+
+app.use(notFoundHandler);
+
+app.use(errorHandler);
 
 export default app;
