@@ -4,6 +4,10 @@ import type { CreateUserDto } from './user.dto.js';
 
 export async function createUser(req: Request, res: Response, next: NextFunction): Promise<void> {
   try {
+    if (!req.user) {
+      res.status(401).json({ status: 401, message: 'Authentication required' });
+      return;
+    }
     const data: CreateUserDto = req.body;
     const result = await userService.createUser(req.user as object, data);
     res.status(result.status).json(result);
@@ -12,17 +16,4 @@ export async function createUser(req: Request, res: Response, next: NextFunction
   }
 }
 
-export async function getUserById(req: Request, res: Response, next: NextFunction): Promise<void> {
-  try {
-    const { id } = req.params;
-    if (typeof id !== 'string') {
-      res.status(400).json({ error: 'Missing or invalid id parameter' });
-      return;
-    }
-    const result = await userService.getUserById(id);
-    res.status(result.status).json(result);
-  } catch (error) {
-    next(error);
-  }
-}
 
