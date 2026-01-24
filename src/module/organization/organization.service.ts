@@ -1,5 +1,5 @@
 import * as organizationRepo from './organization.repository.js';
-import type { CreateOrganizationDto, OrganizationResponseDto } from './organization.dto.js';
+import type { CreateOrganizationDto, OrganizationResponseDto, OrganizationListResponseDto } from './organization.dto.js';
 
 export async function createOrganization(data: CreateOrganizationDto): Promise<OrganizationResponseDto> {
     if (!data.slug) {
@@ -18,3 +18,11 @@ export async function createOrganization(data: CreateOrganizationDto): Promise<O
     };
 }
 
+export async function getAllOrganizations(): Promise<OrganizationListResponseDto> {
+    const organizations = await organizationRepo.findAll();
+    return {
+        status: 200,
+        message: 'Organizations fetched successfully',
+        data: organizations,
+    };
+}

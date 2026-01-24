@@ -20,5 +20,17 @@ export interface OrganizationResponseDto {
     slug: string;
     description: string | null;
     isActive: boolean;
-  }
+  };
+}
+
+export interface OrganizationListResponseDto {
+  status: number;
+  message: string;
+  data: {
+    id: string;
+    name: string;
+    slug: string;
+    description: string | null;
+    isActive: boolean;
+  }[];
 }

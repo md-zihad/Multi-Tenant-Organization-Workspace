@@ -6,5 +6,7 @@ const organizationRouter = Router();
 
 organizationRouter.post('/', authenticate, requireRole('PLATFORM_ADMIN'), organizationController.createOrganization);
 
+organizationRouter.get('/', authenticate, requireRole('PLATFORM_ADMIN'), organizationController.getAllOrganizations);
+
 
 export default organizationRouter;

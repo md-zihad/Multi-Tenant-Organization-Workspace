@@ -9,8 +9,12 @@ export async function create(organizationData: Partial<Organization>): Promise<O
   return repo.save(organization);
 }
 
-
 export async function findBySlug(slug: string): Promise<Organization | null> {
   const repo = getOrganizationRepository();
   return repo.findOne({ where: { slug } });
+}
+
+export async function findAll(): Promise<Organization[]> {
+  const repo = getOrganizationRepository();
+  return repo.find();
 }
