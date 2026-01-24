@@ -2,8 +2,8 @@ import * as userRepo from './user.repository.js';
 import { hashPassword } from '../../utils/password.js';
 import type { CreateUserDto, UserResponseDto } from './user.dto.js';
 
-export async function createUser(role: string, data: CreateUserDto): Promise<UserResponseDto> {
-
+export async function createUser(reqUser: object, data: CreateUserDto): Promise<UserResponseDto> {
+  console.log(reqUser)
   const existingUser = await userRepo.findByEmail(data.email);
   if (existingUser) {
     throw new Error('User with this email already exists');
@@ -11,8 +11,11 @@ export async function createUser(role: string, data: CreateUserDto): Promise<Use
 
   const hashedPassword = await hashPassword(data.password);
 
-  if (role === 'PLATFORM_ADMIN') {
+
+  if ((reqUser as any).role === 'PLATFORM_ADMIN') {
     data.role = 'ORG_ADMIN';
+  } else if ((reqUser as any).role === 'ORG_ADMIN') {
+    data.organizationId = (reqUser as any).organizationId;
   }
 
   const user = await userRepo.create({

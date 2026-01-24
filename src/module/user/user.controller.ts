@@ -2,11 +2,11 @@ import type { Request, Response, NextFunction } from 'express';
 import * as userService from './user.service.js';
 import type { CreateUserDto } from './user.dto.js';
 
-export async function createUser(role: string, req: Request, res: Response, next: NextFunction): Promise<void> {
+export async function createUser(reqUser: object, req: Request, res: Response, next: NextFunction): Promise<void> {
   try {
     const data: CreateUserDto = req.body;
-
-    const result = await userService.createUser(role, data);
+    console.log(reqUser)
+    const result = await userService.createUser(reqUser, data);
     res.status(result.status).json(result);
   } catch (error) {
     next(error);

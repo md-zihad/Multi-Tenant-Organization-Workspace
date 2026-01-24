@@ -58,6 +58,7 @@ export function requireRole(...allowedRoles: string[]) {
     try {
       const decoded = verifyAccessToken(token);
       const roleFromToken = decoded.role;
+    
 
 
       if (!allowedRoles.includes(roleFromToken)) {
@@ -74,7 +75,9 @@ export function requireRole(...allowedRoles: string[]) {
         role: decoded.role,
         organizationId: decoded.organizationId,
       };
-      next(roleFromToken);
+
+      const reqUser = req.user
+      next(reqUser);
     } catch (error) {
       const message = error instanceof Error ? error.message : 'Invalid or expired token';
       res.status(401).json({ status: 401, message });
