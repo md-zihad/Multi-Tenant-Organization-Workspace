@@ -2,40 +2,28 @@ import type { Request, Response, NextFunction } from 'express';
 import { verifyAccessToken } from '../utils/jwt.js';
 
 
+function getBearerToken(req: Request): string | null {
+  const authHeader = req.headers.authorization;
+  if (!authHeader?.startsWith('Bearer ')) return null;
+  const token = authHeader.substring(7).trim();
+  return token || null;
+}
+
 export async function authenticate(
   req: Request,
   res: Response,
   next: NextFunction
 ): Promise<void> {
+  const token = getBearerToken(req);
+  if (!token) {
+    res.status(401).json({
+      status: 401,
+      message: 'Authorization header is missing or invalid. Use: Bearer <token>',
+    });
+    return;
+  }
+
   try {
-    const authHeader = req.headers.authorization;
-
-    if (!authHeader) {
-      res.status(401).json({
-        status: 401,
-        message: 'Authorization header is missing',
-      });
-      return;
-    }
-
-    if (!authHeader.startsWith('Bearer ')) {
-      res.status(401).json({
-        status: 401,
-        message: 'Authorization header must start with "Bearer "',
-      });
-      return;
-    }
-
-    const token = authHeader.substring(7);
-
-    if (!token) {
-      res.status(401).json({
-        status: 401,
-        message: 'Token is missing',
-      });
-      return;
-    }
-
     const decoded = verifyAccessToken(token);
 
     req.user = {
@@ -56,25 +44,40 @@ export async function authenticate(
   }
 }
 
-
 export function requireRole(...allowedRoles: string[]) {
-  return (req: Request, res: Response, next: NextFunction): void => {
-    if (!req.user) {
+  return async (req: Request, res: Response, next: NextFunction): Promise<void> => {
+    const token = getBearerToken(req);
+    if (!token) {
       res.status(401).json({
         status: 401,
-        message: 'Authentication required',
+        message: 'Authorization header is missing or invalid. Use: Bearer <token>',
       });
       return;
     }
 
-    if (!allowedRoles.includes(req.user.role)) {
-      res.status(403).json({
-        status: 403,
-        message: 'Insufficient permissions. Required role: ' + allowedRoles.join(' or '),
-      });
-      return;
-    }
+    try {
+      const decoded = verifyAccessToken(token);
+      const roleFromToken = decoded.role;
 
-    next();
+
+      if (!allowedRoles.includes(roleFromToken)) {
+        res.status(403).json({
+          status: 403,
+          message: 'Insufficient permissions. Required role: ' + allowedRoles.join(' or '),
+        });
+        return;
+      }
+
+      req.user = {
+        id: decoded.id,
+        email: decoded.email,
+        role: decoded.role,
+        organizationId: decoded.organizationId,
+      };
+      next(roleFromToken);
+    } catch (error) {
+      const message = error instanceof Error ? error.message : 'Invalid or expired token';
+      res.status(401).json({ status: 401, message });
+    }
   };
 }
