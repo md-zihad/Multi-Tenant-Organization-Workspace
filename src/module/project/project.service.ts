@@ -3,6 +3,7 @@ import type {
     CreateProjectDto,
     ProjectResponseDto,
     ProjectListResponseDto,
+    UpdateProjectDto
 } from './project.dto.js';
 
 export async function createProject(
@@ -71,42 +72,42 @@ export async function getProjectsForMyOrganization(
     };
 }
 
-// export async function updateProject(
-//     id: string,
-//     data: UpdateProjectDto,
-//     caller: CallerContext
-// ): Promise<ProjectResponseDto> {
-//     if (caller.role !== 'ORG_ADMIN') {
-//         throw new Error('Only organization admins can update projects');
-//     }
+export async function updateProject(
+    id: string,
+    data: UpdateProjectDto,
+    caller: object
+): Promise<ProjectResponseDto> {
+    if ((caller as any).role !== 'ORG_ADMIN') {
+        throw new Error('Only organization admins can update projects');
+    }
 
-//     const project = await projectRepo.findByIdAndOrganization(
-//         id,
-//         caller.organizationId!
-//     );
-//     if (!project) {
-//         throw new Error('Project not found or you do not have access to it');
-//     }
+    const project = await projectRepo.findByIdAndOrganization(
+        id,
+        (caller as any).organizationId!
+    );
+    if (!project) {
+        throw new Error('Project not found or you do not have access to it');
+    }
 
-//     await projectRepo.update(id, data);
+    await projectRepo.update(id, data);
 
-//     const updatedProject = await projectRepo.findById(id);
-//     if (!updatedProject) {
-//         throw new Error('Failed to fetch updated project');
-//     }
+    const updatedProject = await projectRepo.findById(id);
+    if (!updatedProject) {
+        throw new Error('Failed to fetch updated project');
+    }
 
-//     return {
-//         status: 200,
-//         message: 'Project updated successfully',
-//         data: {
-//             id: updatedProject.id,
-//             name: updatedProject.name,
-//             description: updatedProject.description,
-//             organizationId: updatedProject.organizationId,
-//             createdBy: updatedProject.createdBy,
-//             isActive: updatedProject.isActive,
-//             createdAt: updatedProject.createdAt,
-//             updatedAt: updatedProject.updatedAt,
-//         },
-//     };
-// }
+    return {
+        status: 200,
+        message: 'Project updated successfully',
+        data: {
+            id: updatedProject.id,
+            name: updatedProject.name,
+            description: updatedProject.description,
+            organizationId: updatedProject.organizationId,
+            createdBy: updatedProject.createdBy,
+            isActive: updatedProject.isActive,
+            createdAt: updatedProject.createdAt,
+            updatedAt: updatedProject.updatedAt,
+        },
+    };
+}

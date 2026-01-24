@@ -32,11 +32,11 @@ projectRouter.get(
 //   projectController.getProjectById
 // );
 
-// projectRouter.put(
-//   '/:id',
-//   authenticate,
-//   requireRole('ORG_ADMIN'),
-//   projectController.updateProject
-// );
+projectRouter.put(
+  '/:id',
+  authenticate,
+  requireRole('ORG_ADMIN'),
+  projectController.updateProject
+);
 
 export default projectRouter;
