@@ -69,7 +69,7 @@ export function getDatabaseConfig(): DatabaseConfig {
  * Validates and returns server configuration
  */
 export function getServerConfig(): ServerConfig {
-    const port = Number(process.env.PORT) || 3000;
+    const port = Number(process.env.PORT) || 4000;
     if (isNaN(port) || port <= 0 || port > 65535) {
         throw new Error(`Invalid PORT: ${process.env.PORT}. Must be a number between 1 and 65535.`);
     }
