@@ -10,7 +10,7 @@ import {
   Index,
 } from 'typeorm';
 
-import { Organization } from '../organization/Organization.entity.js';
+import type { Organization } from '../organization/Organization.entity.js';
 import { User } from '../user/User.entity.js';
 import type { Task } from '../task/Task.entity.js';
 
@@ -31,7 +31,7 @@ export class Project {
   @Column({ type: 'uuid' })
   organizationId!: string;
 
-  @ManyToOne(() => Organization)
+  @ManyToOne('Organization')
   @JoinColumn({ name: 'organizationId' })
   organization!: Organization;
 
