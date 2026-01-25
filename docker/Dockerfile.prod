@@ -23,7 +23,7 @@ RUN npm ci --only=production
 
 COPY --from=builder /app/dist ./dist
 
-COPY .env.prod .env
+COPY ../.env.prod .env
 
 ENV PORT=4000
 EXPOSE ${PORT}
