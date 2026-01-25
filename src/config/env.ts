@@ -94,9 +94,9 @@ export function getJWTConfig(): JWTConfig {
         );
     }
 
-    if (secret.length < 5) {
+    if (secret.length < 15) {
         throw new Error(
-            'JWT_SECRET must be at least 32 characters long for security purposes.'
+            'JWT_SECRET must be at least 15 characters long for security purposes.'
         );
     }
 
