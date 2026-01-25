@@ -12,7 +12,7 @@ import {
 
 import { Organization } from '../organization/Organization.entity.js';
 import { User } from '../user/User.entity.js';
-import { Task } from '../task/Task.entity.js';
+import type { Task } from '../task/Task.entity.js';
 
 @Entity('projects')
 @Index(['organizationId'])
@@ -42,7 +42,7 @@ export class Project {
   @JoinColumn({ name: 'createdBy' })
   creator!: User;
 
-  @OneToMany(() => Task, (task) => task.project)
+  @OneToMany('Task', 'project')
   tasks!: Task[];
 
   @Column({ type: 'boolean', default: true })
