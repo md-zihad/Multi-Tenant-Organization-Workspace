@@ -22,6 +22,11 @@ interface ServerConfig {
     nodeEnv: string;
 }
 
+interface JWTConfig {
+    secret: string;
+    expiresIn: string;
+}
+
 /**
  * Validates and returns database configuration
  */
@@ -64,7 +69,7 @@ export function getDatabaseConfig(): DatabaseConfig {
  * Validates and returns server configuration
  */
 export function getServerConfig(): ServerConfig {
-    const port = Number(process.env.PORT) || 3000;
+    const port = Number(process.env.PORT) || 4000;
     if (isNaN(port) || port <= 0 || port > 65535) {
         throw new Error(`Invalid PORT: ${process.env.PORT}. Must be a number between 1 and 65535.`);
     }
@@ -73,5 +78,30 @@ export function getServerConfig(): ServerConfig {
         port,
         host: process.env.HOST || '0.0.0.0',
         nodeEnv: process.env.NODE_ENV || 'development',
+    };
+}
+
+/**
+ * Validates and returns JWT configuration
+ */
+export function getJWTConfig(): JWTConfig {
+    const secret = process.env.JWT_SECRET;
+    
+    if (!secret) {
+        throw new Error(
+            'Missing required environment variable: JWT_SECRET\n' +
+            'Please check your .env file and ensure JWT_SECRET is set.'
+        );
+    }
+
+    if (secret.length < 15) {
+        throw new Error(
+            'JWT_SECRET must be at least 15 characters long for security purposes.'
+        );
+    }
+
+    return {
+        secret,
+        expiresIn: process.env.JWT_EXPIRES_IN || '24h',
     };
 }

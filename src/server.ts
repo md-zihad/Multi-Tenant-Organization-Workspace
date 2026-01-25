@@ -17,7 +17,7 @@ async function startServer() {
 
         const shutdown = async (signal: string) => {
             console.log(`${signal} received: closing HTTP server`);
-            
+
             const shutdownTimeout = setTimeout(() => {
                 console.error('Forced shutdown after timeout');
                 process.exit(1);
