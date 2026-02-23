@@ -19,13 +19,24 @@ FROM node:22-alpine AS production
 WORKDIR /app
 
 COPY package.json package-lock.json ./
+
 RUN npm ci --only=production
 
 COPY --from=builder /app/dist ./dist
 
-COPY ../.env.prod .env
+# Copy environment file (should be mounted as volume in production)
+COPY .env.example .env.example
 
+ENV NODE_ENV=production
 ENV PORT=4000
 EXPOSE ${PORT}
+
+# Add non-root user for security
+RUN addgroup -g 1001 -S nodejs
+RUN adduser -S nodejs -u 1001
+USER nodejs
+
+HEALTHCHECK --interval=30s --timeout=3s --start-period=5s --retries=3 \
+  CMD node -e "require('http').get('http://localhost:4000/health', (res) => { process.exit(res.statusCode === 200 ? 0 : 1) })"
 
 CMD ["node", "dist/server.js"]
